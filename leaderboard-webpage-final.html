@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEADERBOARD | SLIIT Xtreme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .App-header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2rem 1rem;
+        }
+
+        .Heading-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.1);
+        }
+
+        .Heading {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 4rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        /* Statistics Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Search and Controls */
+        .controls-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .filter-info {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Table Styles */
+        .Table-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            color: #fff;
+        }
+
+        .table thead {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .table thead th {
+            padding: 1.2rem 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: left;
+        }
+
+        .table thead th:first-child {
+            width: 80px;
+            text-align: center;
+        }
+
+        .table thead th:last-child {
+            width: 120px;
+            text-align: center;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.01);
+        }
+
+        .table tbody tr.top-3 {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .table tbody tr.rank-1 {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.05));
+        }
+
+        .table tbody tr.rank-2 {
+            background: linear-gradient(90deg, rgba(192, 192, 192, 0.2), rgba(192, 192, 192, 0.05));
+        }
+
+        .table tbody tr.rank-3 {
+            background: linear-gradient(90deg, rgba(205, 127, 50, 0.2), rgba(205, 127, 50, 0.05));
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .rank-cell {
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-weight: 900;
+            font-size: 1.2rem;
+        }
+
+        .rank-badge-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .rank-badge-2 {
+            background: linear-gradient(135deg, #C0C0C0, #808080);
+            box-shadow: 0 4px 15px rgba(192, 192, 192, 0.5);
+        }
+
+        .rank-badge-3 {
+            background: linear-gradient(135deg, #CD7F32, #8B4513);
+            box-shadow: 0 4px 15px rgba(205, 127, 50, 0.5);
+        }
+
+        .rank-badge-other {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .team-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .score-cell {
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #4CAF50;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination-info {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Loading Spinner */
+        .loading-container {
+            text-align: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Error Message */
+        .error-container {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .error-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ff6b6b;
+        }
+
+        .error-message {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo-section {
+                gap: 1.5rem;
+            }
+
+            .logo-img {
+                height: 60px;
+            }
+
+            .Heading {
+                font-size: 2.5rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .rank-badge {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .pagination-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="App">
+        <header class="App-header">
+            <div class="Heading-container">
+                <!-- Logo Section -->
+                <div class="logo-section">
+                    <img src="https://sliit.lk/wp-content/uploads/2021/09/SLIIT-Logo-Crest.png" alt="SLIIT Logo"
+                        class="logo-img">
+                    <img src="https://www.ieee.lk/assets/images/ieee-logo.png" alt="IEEE Logo" class="logo-img">
+                </div>
+
+                <div class="animate__animated animate__pulse animate__infinite">
+                    <h1 class="Heading">LEADERBOARD</h1>
+                </div>
+                <p class="subtitle">SLIIT Xtreme 25 - Competition Rankings</p>
+
+                <!-- Loading Section -->
+                <div id="loadingSection" class="loading-container">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Loading leaderboard data...</p>
+                </div>
+
+                <!-- Error Section -->
+                <div id="errorSection" class="error-container hidden">
+                    <h2 class="error-title">Unable to Load Data</h2>
+                    <p class="error-message">Make sure 'leaderboard.csv' is in the same directory as this HTML file.</p>
+                    <button class="btn" onclick="location.reload()">Retry</button>
+                </div>
+
+                <!-- Statistics Dashboard -->
+                <div id="statsSection" class="stats-container hidden">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Teams</div>
+                        <div class="stat-value" id="totalParticipants">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Top Score</div>
+                        <div class="stat-value" id="topScore">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Average Score</div>
+                        <div class="stat-value" id="avgScore">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Best Time</div>
+                        <div class="stat-value" id="bestTime">--</div>
+                    </div>
+                </div>
+
+                <!-- Search and Controls -->
+                <div id="controlsSection" class="controls-container hidden">
+                    <div class="search-row">
+                        <input type="text" id="searchInput" class="search-input"
+                            placeholder="Search by team name or country...">
+                        <button class="btn" onclick="sortBy('rank')">Sort by Rank</button>
+                        <button class="btn" onclick="sortBy('score')">Sort by Score</button>
+                        <button class="btn" onclick="resetData()">Reset</button>
+                    </div>
+                    <p id="filterInfo" class="filter-info"></p>
+                </div>
+
+                <!-- Leaderboard Table -->
+                <div id="leaderboardSection" class="Table-container hidden">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Team Name</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody">
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="paginationSection" class="pagination-container hidden">
+                    <p id="paginationInfo" class="pagination-info"></p>
+                    <div class="pagination-buttons">
+                        <button class="btn" onclick="prevPage()" id="prevBtn">Previous</button>
+                        <button class="btn" onclick="nextPage()" id="nextBtn">Next</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 SLIIT Xtreme 25. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let leaderboardData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        const itemsPerPage = 50;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadCSVFile();
+        });
+
+        async function loadCSVFile() {
+            try {
+                const response = await fetch('leaderboard.csv');
+
+                if (!response.ok) {
+                    throw new Error('CSV file not found');
+                }
+
+                const csvText = await response.text();
+                parseCSV(csvText);
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                document.getElementById('loadingSection').classList.add('hidden');
+                document.getElementById('errorSection').classList.remove('hidden');
+            }
+        }
+
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+
+            leaderboardData = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim() === '') continue;
+
+                const values = lines[i].split(',');
+                const participant = {};
+
+                headers.forEach((header, index) => {
+                    participant[header] = values[index] ? values[index].trim() : '';
+                });
+
+                leaderboardData.push(participant);
+            }
+
+            filteredData = [...leaderboardData];
+
+            setTimeout(() => {
+                document.getElementById('loadingSection').classList.add('hidden');
+                displayLeaderboard();
+                updateStatistics();
+                showControls();
+            }, 500);
+        }
+
+        function displayLeaderboard() {
+            const tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = '';
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filteredData.slice(start, end);
+
+            pageData.forEach((participant) => {
+                const row = createParticipantRow(participant);
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('leaderboardSection').classList.remove('hidden');
+            updatePagination();
+        }
+
+        function createParticipantRow(participant) {
+            const tr = document.createElement('tr');
+            const rank = parseInt(participant.rank);
+
+            if (rank === 1) {
+                tr.className = 'rank-1';
+            } else if (rank === 2) {
+                tr.className = 'rank-2';
+            } else if (rank === 3) {
+                tr.className = 'rank-3';
+            }
+
+            let rankBadgeClass = 'rank-badge-other';
+            if (rank === 1) rankBadgeClass = 'rank-badge-1';
+            else if (rank === 2) rankBadgeClass = 'rank-badge-2';
+            else if (rank === 3) rankBadgeClass = 'rank-badge-3';
+
+            tr.innerHTML = `
+                <td class="rank-cell">
+                    <div class="rank-badge ${rankBadgeClass}">${participant.rank}</div>
+                </td>
+                <td class="team-name">${participant.hacker || participant['Team Name'] || 'N/A'}</td>
+                <td class="score-cell">${participant.score || '0'}</td>
+            `;
+
+            return tr;
+        }
+
+        function updateStatistics() {
+            const total = leaderboardData.length;
+            document.getElementById('totalParticipants').textContent = total;
+
+            if (total > 0) {
+                const topScore = Math.max(...leaderboardData.map(p => parseInt(p.score) || 0));
+                document.getElementById('topScore').textContent = topScore;
+
+                const avgScore = Math.round(leaderboardData.reduce((sum, p) => sum + (parseInt(p.score) || 0), 0) / total);
+                document.getElementById('avgScore').textContent = avgScore;
+
+                const times = leaderboardData.map(p => parseInt(p.time_taken) || 0).filter(t => t > 0);
+                const bestTime = times.length > 0 ? Math.min(...times) : 0;
+                document.getElementById('bestTime').textContent = formatTime(bestTime);
+
+                document.getElementById('statsSection').classList.remove('hidden');
+            }
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || seconds === 0) return '--';
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hours}h ${minutes}m`;
+        }
+
+        function showControls() {
+            document.getElementById('controlsSection').classList.remove('hidden');
+            document.getElementById('paginationSection').classList.remove('hidden');
+
+            document.getElementById('searchInput').addEventListener('input', function (e) {
+                searchParticipants(e.target.value);
+            });
+        }
+
+        function searchParticipants(query) {
+            if (!query.trim()) {
+                filteredData = [...leaderboardData];
+            } else {
+                const lowerQuery = query.toLowerCase();
+                filteredData = leaderboardData.filter(p =>
+                    (p.hacker && p.hacker.toLowerCase().includes(lowerQuery)) ||
+                    (p['Team Name'] && p['Team Name'].toLowerCase().includes(lowerQuery)) ||
+                    (p.country && p.country.toLowerCase().includes(lowerQuery))
+                );
+            }
+
+            currentPage = 1;
+            displayLeaderboard();
+
+            const filterInfo = document.getElementById('filterInfo');
+            if (query.trim()) {
+                filterInfo.textContent = `Showing ${filteredData.length} of ${leaderboardData.length} teams`;
+            } else {
+                filterInfo.textContent = '';
+            }
+        }
+
+        function sortBy(field) {
+            if (field === 'rank') {
+                filteredData.sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+            } else if (field === 'score') {
+                filteredData.sort((a, b) => parseInt(b.score) - parseInt(a.score));
+            }
+            currentPage = 1;
+            displayLeaderboard();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, filteredData.length);
+
+            document.getElementById('paginationInfo').textContent =
+                `Showing ${start}-${end} of ${filteredData.length} teams`;
+
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayLeaderboard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayLeaderboard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function resetData() {
+            filteredData = [...leaderboardData];
+            currentPage = 1;
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterInfo').textContent = '';
+            displayLeaderboard();
+        }
+    </script>
+</body>
+
+</html>

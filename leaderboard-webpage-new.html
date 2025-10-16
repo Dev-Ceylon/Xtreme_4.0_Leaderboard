@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLIIT Xtreme 25 - Leaderboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .trophy-gold {
+            color: #FFD700;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+        }
+        .trophy-silver {
+            color: #C0C0C0;
+            filter: drop-shadow(0 0 8px rgba(192, 192, 192, 0.5));
+        }
+        .trophy-bronze {
+            color: #CD7F32;
+            filter: drop-shadow(0 0 8px rgba(205, 127, 50, 0.5));
+        }
+        .rank-badge-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+        .rank-badge-2 {
+            background: linear-gradient(135deg, #C0C0C0, #808080);
+        }
+        .rank-badge-3 {
+            background: linear-gradient(135deg, #CD7F32, #8B4513);
+        }
+        .rank-badge-other {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <header class="py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <svg class="w-12 h-12 trophy-gold pulse-animation" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z"/>
+                </svg>
+                <h1 class="text-4xl md:text-6xl font-bold text-white slide-in">
+                    SLIIT Xtreme 25
+                </h1>
+                <svg class="w-12 h-12 trophy-gold pulse-animation" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z"/>
+                </svg>
+            </div>
+            <p class="text-xl text-purple-100 slide-in">Competition Leaderboard</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 pb-12">
+        <!-- Loading Indicator -->
+        <div id="loadingSection" class="glass-effect rounded-2xl p-12 text-center">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-white text-xl">Loading leaderboard data...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorSection" class="hidden glass-effect rounded-2xl p-8 text-center">
+            <svg class="w-16 h-16 mx-auto mb-4 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <h2 class="text-2xl font-bold text-white mb-4">Unable to Load Data</h2>
+            <p class="text-purple-100 mb-6">Make sure 'leaderboard.csv' is in the same directory as this HTML file.</p>
+            <button onclick="location.reload()" class="px-8 py-3 bg-white text-purple-700 font-bold rounded-xl hover:bg-purple-50 transition-all">
+                Retry
+            </button>
+        </div>
+
+        <!-- Statistics Dashboard -->
+        <div id="statsSection" class="hidden grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="glass-effect rounded-xl p-6 slide-in">
+                <div class="flex items-center gap-4">
+                    <svg class="w-12 h-12 text-purple-300" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    <div>
+                        <p class="text-purple-200 text-sm">Total Participants</p>
+                        <p id="totalParticipants" class="text-3xl font-bold text-white">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass-effect rounded-xl p-6 slide-in" style="animation-delay: 0.1s">
+                <div class="flex items-center gap-4">
+                    <svg class="w-12 h-12 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <div>
+                        <p class="text-purple-200 text-sm">Top Score</p>
+                        <p id="topScore" class="text-3xl font-bold text-white">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass-effect rounded-xl p-6 slide-in" style="animation-delay: 0.2s">
+                <div class="flex items-center gap-4">
+                    <svg class="w-12 h-12 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                    <div>
+                        <p class="text-purple-200 text-sm">Best Time</p>
+                        <p id="bestTime" class="text-2xl font-bold text-white">--</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass-effect rounded-xl p-6 slide-in" style="animation-delay: 0.3s">
+                <div class="flex items-center gap-4">
+                    <svg class="w-12 h-12 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                    </svg>
+                    <div>
+                        <p class="text-purple-200 text-sm">Average Score</p>
+                        <p id="avgScore" class="text-3xl font-bold text-white">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div id="controlsSection" class="hidden glass-effect rounded-xl p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <input type="text" id="searchInput" placeholder="Search by name or country..." 
+                           class="w-full px-4 py-3 bg-white/20 text-white placeholder-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50">
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="sortBy('rank')" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">
+                        By Rank
+                    </button>
+                    <button onclick="sortBy('score')" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">
+                        By Score
+                    </button>
+                    <button onclick="resetData()" class="px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">
+                        Reset
+                    </button>
+                </div>
+            </div>
+            <p id="filterInfo" class="text-purple-100 text-sm mt-4"></p>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div id="leaderboardSection" class="hidden glass-effect rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-purple-900/50 border-b border-white/20">
+                            <th class="px-4 md:px-6 py-4 text-left text-xs md:text-sm font-bold text-purple-200 uppercase tracking-wider">Rank</th>
+                            <th class="px-4 md:px-6 py-4 text-left text-xs md:text-sm font-bold text-purple-200 uppercase tracking-wider">Participant</th>
+                            <th class="px-4 md:px-6 py-4 text-center text-xs md:text-sm font-bold text-purple-200 uppercase tracking-wider">Score</th>
+                            <th class="px-4 md:px-6 py-4 text-center text-xs md:text-sm font-bold text-purple-200 uppercase tracking-wider hidden md:table-cell">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody" class="divide-y divide-white/10">
+                        <!-- Data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div id="paginationSection" class="hidden mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p id="paginationInfo" class="text-white"></p>
+            <div class="flex gap-2">
+                <button onclick="prevPage()" id="prevBtn" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    Previous
+                </button>
+                <button onclick="nextPage()" id="nextBtn" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-purple-100">
+        <p>&copy; 2025 SLIIT Xtreme 25. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let leaderboardData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        const itemsPerPage = 50;
+
+        // Auto-load CSV on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCSVFile();
+        });
+
+        async function loadCSVFile() {
+            try {
+                const response = await fetch('leaderboard.csv');
+                
+                if (!response.ok) {
+                    throw new Error('CSV file not found');
+                }
+                
+                const csvText = await response.text();
+                parseCSV(csvText);
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                document.getElementById('loadingSection').classList.add('hidden');
+                document.getElementById('errorSection').classList.remove('hidden');
+            }
+        }
+
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            
+            leaderboardData = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim() === '') continue;
+                
+                const values = lines[i].split(',');
+                const participant = {};
+                
+                headers.forEach((header, index) => {
+                    participant[header] = values[index] ? values[index].trim() : '';
+                });
+                
+                leaderboardData.push(participant);
+            }
+
+            filteredData = [...leaderboardData];
+            
+            setTimeout(() => {
+                document.getElementById('loadingSection').classList.add('hidden');
+                displayLeaderboard();
+                updateStatistics();
+                showControls();
+            }, 500);
+        }
+
+        function displayLeaderboard() {
+            const tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = '';
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filteredData.slice(start, end);
+
+            pageData.forEach((participant, index) => {
+                const row = createParticipantRow(participant, start + index);
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('leaderboardSection').classList.remove('hidden');
+            updatePagination();
+        }
+
+        function createParticipantRow(participant, index) {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-white/5 transition-all fade-in';
+            if (participant.rank <= 3) {
+                tr.className += ' bg-white/5';
+            }
+
+            const rank = parseInt(participant.rank);
+            let rankBadgeClass = 'rank-badge-other';
+            let trophyIcon = '';
+
+            if (rank === 1) {
+                rankBadgeClass = 'rank-badge-1';
+                trophyIcon = '<svg class="w-5 h-5 trophy-gold inline-block mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z"/></svg>';
+            } else if (rank === 2) {
+                rankBadgeClass = 'rank-badge-2';
+                trophyIcon = '<svg class="w-5 h-5 trophy-silver inline-block mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z"/></svg>';
+            } else if (rank === 3) {
+                rankBadgeClass = 'rank-badge-3';
+                trophyIcon = '<svg class="w-5 h-5 trophy-bronze inline-block mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z"/></svg>';
+            }
+
+            const initials = participant.hacker ? participant.hacker.substring(0, 2).toUpperCase() : '??';
+            const avatarColor = `hsl(${(rank * 137.5) % 360}, 70%, 60%)`;
+
+            tr.innerHTML = `
+                <td class="px-4 md:px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center gap-2">
+                        ${trophyIcon}
+                        <span class="${rankBadgeClass} px-3 py-1 rounded-full text-sm font-bold text-white">
+                            #${participant.rank}
+                        </span>
+                    </div>
+                </td>
+                <td class="px-4 md:px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" 
+                             style="background: linear-gradient(135deg, ${avatarColor}, ${adjustColor(avatarColor, -20)})">
+                            ${initials}
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-white font-semibold truncate">${participant.hacker}</div>
+                            ${participant.country ? `<div class="text-purple-300 text-sm truncate">${participant.country}</div>` : ''}
+                        </div>
+                    </div>
+                </td>
+                <td class="px-4 md:px-6 py-4 whitespace-nowrap text-center">
+                    <span class="text-2xl font-bold text-white">${participant.score}</span>
+                </td>
+                <td class="px-4 md:px-6 py-4 whitespace-nowrap text-center hidden md:table-cell">
+                    <span class="text-purple-200">${formatTime(participant.time_taken)}</span>
+                </td>
+            `;
+
+            return tr;
+        }
+
+        function adjustColor(color, amount) {
+            return color.replace(/\d+(?=%)/g, match => Math.max(0, Math.min(100, parseInt(match) + amount)));
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || seconds === '0') return '--';
+            const sec = parseInt(seconds);
+            const hours = Math.floor(sec / 3600);
+            const minutes = Math.floor((sec % 3600) / 60);
+            const secs = sec % 60;
+            return `${hours}h ${minutes}m ${secs}s`;
+        }
+
+        function updateStatistics() {
+            const total = leaderboardData.length;
+            document.getElementById('totalParticipants').textContent = total;
+
+            if (total > 0) {
+                const topScore = Math.max(...leaderboardData.map(p => parseInt(p.score) || 0));
+                document.getElementById('topScore').textContent = topScore;
+
+                const times = leaderboardData.map(p => parseInt(p.time_taken) || 0).filter(t => t > 0);
+                const bestTime = times.length > 0 ? Math.min(...times) : 0;
+                document.getElementById('bestTime').textContent = formatTime(bestTime);
+
+                const avgScore = Math.round(leaderboardData.reduce((sum, p) => sum + (parseInt(p.score) || 0), 0) / total);
+                document.getElementById('avgScore').textContent = avgScore;
+
+                document.getElementById('statsSection').classList.remove('hidden');
+            }
+        }
+
+        function showControls() {
+            document.getElementById('controlsSection').classList.remove('hidden');
+            document.getElementById('paginationSection').classList.remove('hidden');
+            
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                searchParticipants(e.target.value);
+            });
+        }
+
+        function searchParticipants(query) {
+            if (!query.trim()) {
+                filteredData = [...leaderboardData];
+            } else {
+                const lowerQuery = query.toLowerCase();
+                filteredData = leaderboardData.filter(p => 
+                    (p.hacker && p.hacker.toLowerCase().includes(lowerQuery)) ||
+                    (p.country && p.country.toLowerCase().includes(lowerQuery))
+                );
+            }
+            
+            currentPage = 1;
+            displayLeaderboard();
+            
+            const filterInfo = document.getElementById('filterInfo');
+            if (query.trim()) {
+                filterInfo.textContent = `Showing ${filteredData.length} of ${leaderboardData.length} participants`;
+            } else {
+                filterInfo.textContent = '';
+            }
+        }
+
+        function sortBy(field) {
+            if (field === 'rank') {
+                filteredData.sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+            } else if (field === 'score') {
+                filteredData.sort((a, b) => parseInt(b.score) - parseInt(a.score));
+            }
+            currentPage = 1;
+            displayLeaderboard();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, filteredData.length);
+            
+            document.getElementById('paginationInfo').textContent = 
+                `Showing ${start}-${end} of ${filteredData.length} participants`;
+            
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayLeaderboard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayLeaderboard();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function resetData() {
+            filteredData = [...leaderboardData];
+            currentPage = 1;
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterInfo').textContent = '';
+            displayLeaderboard();
+        }
+    </script>
+</body>
+</html>
