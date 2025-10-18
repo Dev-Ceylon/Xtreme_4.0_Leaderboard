@@ -71,3 +71,15 @@
 ============================================================
 2025-10-18 12:59:16,622 - INFO - Automation stopped by user
 2025-10-18 12:59:16,622 - INFO - ============================================================
+2025-10-18 12:59:19,019 - INFO - Running initial update...
+2025-10-18 12:59:19,020 - INFO - ============================================================
+2025-10-18 12:59:19,020 - INFO - Starting leaderboard update
+2025-10-18 12:59:19,020 - INFO - ============================================================
+2025-10-18 12:59:19,020 - INFO - Starting data fetch...
+2025-10-18 12:59:20,686 - INFO - Fetched 17 participants (Total: 17)
+2025-10-18 12:59:20,688 - INFO - ✓ CSV file generated: leaderboard.csv (17 participants)
+2025-10-18 12:59:20,689 - INFO - ✓ Metadata updated
+2025-10-18 12:59:20,689 - INFO - ✓ Leaderboard updated successfully
+2025-10-18 12:59:20,690 - INFO - Scheduler started. Updates every 15 minutes.
+2025-10-18 12:59:20,690 - INFO - Press Ctrl+C to stop
+2025-10-18 12:59:20,690 - INFO - ============================================================
