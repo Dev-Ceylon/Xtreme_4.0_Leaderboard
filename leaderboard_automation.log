@@ -23,3 +23,15 @@
 2025-10-18 11:50:48,455 - INFO - Scheduler started. Updates every 15 minutes.
 2025-10-18 11:50:48,455 - INFO - Press Ctrl+C to stop
 2025-10-18 11:50:48,456 - INFO - ============================================================
+2025-10-18 12:02:00,471 - INFO - Running initial update...
+2025-10-18 12:02:00,471 - INFO - ============================================================
+2025-10-18 12:02:00,471 - INFO - Starting leaderboard update
+2025-10-18 12:02:00,472 - INFO - ============================================================
+2025-10-18 12:02:00,472 - INFO - Starting data fetch...
+2025-10-18 12:02:02,015 - INFO - Fetched 15 participants (Total: 15)
+2025-10-18 12:02:02,016 - INFO - ✓ CSV file generated: leaderboard.csv (15 participants)
+2025-10-18 12:02:02,017 - INFO - ✓ Metadata updated
+2025-10-18 12:02:02,017 - INFO - ✓ Leaderboard updated successfully
+2025-10-18 12:02:02,017 - INFO - Scheduler started. Updates every 15 minutes.
+2025-10-18 12:02:02,018 - INFO - Press Ctrl+C to stop
+2025-10-18 12:02:02,018 - INFO - ============================================================
