@@ -29,12 +29,9 @@
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
+            0%, 100% {
                 opacity: 1;
             }
-
             50% {
                 opacity: 0.7;
             }
@@ -70,7 +67,6 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -90,7 +86,6 @@
             0% {
                 transform: rotate(0deg);
             }
-
             100% {
                 transform: rotate(360deg);
             }
@@ -104,9 +99,79 @@
             from {
                 opacity: 0;
             }
-
             to {
                 opacity: 1;
+            }
+        }
+
+        /* Mobile Responsive Enhancements */
+        @media (max-width: 768px) {
+            .logo-container img {
+                height: 60px;
+            }
+            
+            h1 {
+                font-size: 2rem !important;
+            }
+            
+            .stat-card {
+                padding: 1rem !important;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem !important;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .control-buttons button {
+                width: 100%;
+            }
+            
+            table {
+                font-size: 0.875rem;
+            }
+            
+            .rank-badge-1, .rank-badge-2, .rank-badge-3, .rank-badge-other {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-container {
+                gap: 1rem !important;
+            }
+            
+            .logo-container img {
+                height: 50px;
+            }
+            
+            h1 {
+                font-size: 1.5rem !important;
+            }
+            
+            .stat-card {
+                padding: 0.75rem !important;
+            }
+            
+            .stat-label {
+                font-size: 0.75rem !important;
+            }
+            
+            .stat-value {
+                font-size: 1.25rem !important;
+            }
+            
+            table td, table th {
+                padding: 0.5rem !important;
+            }
+            
+            .team-score {
+                font-size: 1rem !important;
             }
         }
     </style>
@@ -114,95 +179,93 @@
 
 <body class="gradient-bg min-h-screen text-white">
     <!-- Header -->
-    <header class="py-10 px-4">
+    <header class="py-6 md:py-10 px-4">
         <div class="max-w-7xl mx-auto text-center">
             <!-- Logo Section -->
-            <div class="flex justify-center items-center gap-8 flex-wrap mb-6">
+            <div class="logo-container flex justify-center items-center gap-4 md:gap-8 flex-wrap mb-4 md:mb-6">
                 <img src="https://sliitxtreme.ieeesliit.com/images/IEEEXtreme%2019.0%20logo(colored).png" alt="SLIIT Logo"
-                    class="h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
+                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
                 <img src="https://sliitxtreme.ieeesliit.com/images/CS_White%20Logo.png" alt="IEEE Logo"
-                    class="h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
+                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
                 <img src="https://sliitxtreme.ieeesliit.com/images/SliitXtreme_LogoFinal.png" alt="IEEE Logo"
-                    class="h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
+                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
             </div>
 
             <!-- Title -->
             <div class="animate__animated animate__pulse animate__infinite">
-                <h1 class="text-5xl md:text-6xl font-extrabold text-white tracking-widest slide-in drop-shadow-lg">
+                <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-widest slide-in drop-shadow-lg">
                     LEADERBOARD
                 </h1>
             </div>
-            <p class="text-lg text-gray-300 mt-2">SLIIT Xtreme 25 - Competition Rankings</p>
+            <p class="text-sm md:text-lg text-gray-300 mt-2">SLIIT Xtreme 25 - Competition Rankings</p>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 pb-12">
         <!-- Loading Indicator -->
-        <div id="loadingSection" class="glass-effect rounded-2xl p-12 text-center">
+        <div id="loadingSection" class="glass-effect rounded-2xl p-8 md:p-12 text-center">
             <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-xl text-gray-200">Loading leaderboard data...</p>
+            <p class="text-lg md:text-xl text-gray-200">Loading leaderboard data...</p>
         </div>
 
         <!-- Error Message -->
-        <div id="errorSection" class="hidden glass-effect rounded-2xl p-8 text-center border border-red-500/30">
-            <h2 class="text-2xl font-bold text-red-400 mb-3">Unable to Load Data</h2>
-            <p class="text-gray-300 mb-5">Make sure 'leaderboard.csv' is in the same directory as this HTML file.</p>
+        <div id="errorSection" class="hidden glass-effect rounded-2xl p-6 md:p-8 text-center border border-red-500/30">
+            <h2 class="text-xl md:text-2xl font-bold text-red-400 mb-3">Unable to Load Data</h2>
+            <p class="text-sm md:text-base text-gray-300 mb-5">Make sure 'leaderboard.csv' is in the same directory as this HTML file.</p>
             <button onclick="location.reload()"
-                class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all">
+                class="px-6 md:px-8 py-2 md:py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all">
                 Retry
             </button>
         </div>
 
         <!-- Stats Section -->
-        <div id="statsSection" class="hidden grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
-            <div class="glass-effect rounded-xl p-6 text-center">
-                <p class="text-gray-300 text-sm uppercase">Total Teams</p>
-                <p id="totalParticipants" class="text-3xl font-bold mt-2">0</p>
+        <div id="statsSection" class="hidden grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-10">
+            <div class="stat-card glass-effect rounded-xl p-4 md:p-6 text-center">
+                <p class="stat-label text-gray-300 text-xs md:text-sm uppercase">Total Teams</p>
+                <p id="totalParticipants" class="stat-value text-2xl md:text-3xl font-bold mt-2">0</p>
             </div>
-            <div class="glass-effect rounded-xl p-6 text-center">
-                <p class="text-gray-300 text-sm uppercase">Top Score</p>
-                <p id="topScore" class="text-3xl font-bold mt-2">0</p>
+            <div class="stat-card glass-effect rounded-xl p-4 md:p-6 text-center">
+                <p class="stat-label text-gray-300 text-xs md:text-sm uppercase">Top Score</p>
+                <p id="topScore" class="stat-value text-2xl md:text-3xl font-bold mt-2">0</p>
             </div>
-            <div class="glass-effect rounded-xl p-6 text-center">
-                <p class="text-gray-300 text-sm uppercase">Average Score</p>
-                <p id="avgScore" class="text-3xl font-bold mt-2">0</p>
+            <div class="stat-card glass-effect rounded-xl p-4 md:p-6 text-center">
+                <p class="stat-label text-gray-300 text-xs md:text-sm uppercase">Average Score</p>
+                <p id="avgScore" class="stat-value text-2xl md:text-3xl font-bold mt-2">0</p>
             </div>
-            <div class="glass-effect rounded-xl p-6 text-center">
-                <p class="text-gray-300 text-sm uppercase">Best Time</p>
-                <p id="bestTime" class="text-2xl font-semibold mt-2">--</p>
+            <div class="stat-card glass-effect rounded-xl p-4 md:p-6 text-center">
+                <p class="stat-label text-gray-300 text-xs md:text-sm uppercase">Best Time</p>
+                <p id="bestTime" class="stat-value text-lg md:text-2xl font-semibold mt-2">--</p>
             </div>
         </div>
 
         <!-- Search / Sort Controls -->
-        <div id="controlsSection" class="hidden glass-effect rounded-xl p-6 mb-8">
-            <div class="flex flex-col md:flex-row gap-4">
-                <input id="searchInput" type="text" placeholder="Search by team name or country..."
-                    class="flex-1 px-4 py-3 bg-white/10 placeholder-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/40 text-white">
-                <div class="flex gap-2">
+        <div id="controlsSection" class="hidden glass-effect rounded-xl p-4 md:p-6 mb-6 md:mb-8">
+            <div class="flex flex-col gap-3 md:gap-4">
+                <input id="searchInput" type="text" placeholder="Search by team name..."
+                    class="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 placeholder-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/40 text-white text-sm md:text-base">
+                <div class="control-buttons flex flex-col md:flex-row gap-2">
                     <button onclick="sortBy('rank')"
-                        class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all">By Rank</button>
+                        class="px-4 md:px-6 py-2 md:py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all text-sm md:text-base">By Rank</button>
                     <button onclick="sortBy('score')"
-                        class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all">By Score</button>
+                        class="px-4 md:px-6 py-2 md:py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all text-sm md:text-base">By Score</button>
                     <button onclick="resetData()"
-                        class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all">Reset</button>
+                        class="px-4 md:px-6 py-2 md:py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all text-sm md:text-base">Reset</button>
                 </div>
             </div>
-            <p id="filterInfo" class="text-sm text-gray-300 mt-3"></p>
+            <p id="filterInfo" class="text-xs md:text-sm text-gray-300 mt-3"></p>
         </div>
 
         <!-- Leaderboard Table -->
-        <div id="leaderboardSection" class="hidden glass-effect rounded-2xl overflow-hidden">
+        <div id="leaderboardSection" class="hidden glass-effect rounded-xl md:rounded-2xl overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
                         <tr class="bg-white/10 border-b border-white/20">
-                            <th class="px-4 py-4 text-left text-xs uppercase text-gray-300 tracking-wider">Rank</th>
-                            <th class="px-4 py-4 text-left text-xs uppercase text-gray-300 tracking-wider">Team</th>
-                            <th class="px-4 py-4 text-center text-xs uppercase text-gray-300 tracking-wider">Score</th>
-                            <th
-                                class="px-4 py-4 text-center text-xs uppercase text-gray-300 tracking-wider hidden md:table-cell">
-                                Time</th>
+                            <th class="px-2 md:px-4 py-3 md:py-4 text-left text-xs uppercase text-gray-300 tracking-wider">Rank</th>
+                            <th class="px-2 md:px-4 py-3 md:py-4 text-left text-xs uppercase text-gray-300 tracking-wider">Team</th>
+                            <th class="px-2 md:px-4 py-3 md:py-4 text-center text-xs uppercase text-gray-300 tracking-wider">Score</th>
+                            <th class="px-2 md:px-4 py-3 md:py-4 text-center text-xs uppercase text-gray-300 tracking-wider hidden md:table-cell">Time</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboardBody" class="divide-y divide-white/10">
@@ -214,18 +277,18 @@
 
         <!-- Pagination -->
         <div id="paginationSection" class="hidden mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p id="paginationInfo" class="text-gray-200"></p>
+            <p id="paginationInfo" class="text-gray-200 text-sm md:text-base text-center"></p>
             <div class="flex gap-2">
                 <button id="prevBtn" onclick="prevPage()"
-                    class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all disabled:opacity-40">Previous</button>
+                    class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all disabled:opacity-40 text-sm md:text-base">Previous</button>
                 <button id="nextBtn" onclick="nextPage()"
-                    class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all disabled:opacity-40">Next</button>
+                    class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all disabled:opacity-40 text-sm md:text-base">Next</button>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="text-center py-8 text-gray-400 text-sm">
+    <footer class="text-center py-6 md:py-8 text-gray-400 text-xs md:text-sm">
         &copy; 2025 SLIIT Xtreme 25. All rights reserved.
     </footer>
 
@@ -286,10 +349,10 @@
             else if (rank === 2) badge = 'rank-badge-2';
             else if (rank === 3) badge = 'rank-badge-3';
             tr.innerHTML = `
-        <td class="px-4 py-4"><span class="${badge} px-3 py-1 rounded-full text-sm font-bold">#${p.rank}</span></td>
-        <td class="px-4 py-4 font-semibold">${p.hacker || p['Team Name'] || 'N/A'}</td>
-        <td class="px-4 py-4 text-center text-xl font-bold text-green-400">${p.score || 0}</td>
-        <td class="px-4 py-4 text-center text-gray-300 hidden md:table-cell">${formatTime(p.time_taken)}</td>`;
+        <td class="px-2 md:px-4 py-3 md:py-4"><span class="${badge} px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-bold">#${p.rank}</span></td>
+        <td class="px-2 md:px-4 py-3 md:py-4 font-semibold text-sm md:text-base">${p.hacker || p['Team Name'] || 'N/A'}</td>
+        <td class="px-2 md:px-4 py-3 md:py-4 text-center text-lg md:text-xl font-bold text-green-400 team-score">${p.score || 0}</td>
+        <td class="px-2 md:px-4 py-3 md:py-4 text-center text-gray-300 hidden md:table-cell">${formatTime(p.time_taken)}</td>`;
             return tr;
         }
 
