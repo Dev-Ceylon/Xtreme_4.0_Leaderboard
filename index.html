@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEADERBOARD | SLIIT Xtreme 25</title>
-    <link rel="icon" type="image/png" href="https://sliitxtreme.ieeesliit.com/images/SLIITXtreme_Logo%201.png">
+    <link rel="icon" type="image/png" href="https://via.placeholder.com/32">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -185,12 +185,15 @@
     <header class="py-6 md:py-10 px-4">
         <div class="max-w-7xl mx-auto text-center">
             <div class="logo-container flex justify-center items-center gap-4 md:gap-8 flex-wrap mb-4 md:mb-6">
-                <img src="images/IEEEXtreme 19.0 logo(colored).png" alt="SLIIT Logo"
-                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
+                <img src="/images/IEEEXtreme 19.0 logo(colored).png" alt="SLIIT Logo"
+                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg"
+                    onerror="this.style.display='none'">
                 <img src="images/CS_White Logo.png" alt="IEEE Logo"
-                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
-                <img src="images/SLIITXtreme_Logo.png" alt="IEEE Logo"
-                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg">
+                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg"
+                    onerror="this.style.display='none'">
+                <img src="images/SLIITXtreme_Logo.png" alt="Xtreme Logo"
+                    class="h-16 md:h-20 w-auto object-contain transition-transform hover:scale-110 drop-shadow-lg"
+                    onerror="this.style.display='none'">
             </div>
 
             <div class="animate__animated animate__pulse animate__infinite">
@@ -211,8 +214,8 @@
 
         <div id="errorSection" class="hidden glass-effect rounded-2xl p-6 md:p-8 text-center border border-red-500/30">
             <h2 class="text-xl md:text-2xl font-bold text-red-400 mb-3">Unable to Load Data</h2>
-            <p class="text-sm md:text-base text-gray-300 mb-5">Make sure 'leaderboard.csv' is in the same directory as
-                this HTML file.</p>
+            <p class="text-sm md:text-base text-gray-300 mb-5">Failed to fetch leaderboard data from HackerRank API.
+                Please check your internet connection.</p>
             <button onclick="location.reload()"
                 class="px-6 md:px-8 py-2 md:py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all">
                 Retry
@@ -302,46 +305,51 @@
         let currentPage = 1;
         const itemsPerPage = 50;
 
-        document.addEventListener('DOMContentLoaded', loadCSVFile);
+        document.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
-        async function loadCSVFile() {
+        async function loadLeaderboardData() {
             try {
-                const response = await fetch('leaderboard.csv');
-                if (!response.ok) throw new Error('CSV not found');
-                const csvText = await response.text();
-                parseCSV(csvText);
+                // Using CORS proxy to bypass CORS restrictions
+                const apiUrl = 'https://www.hackerrank.com/rest/contests/sliitxtreme-4-final/leaderboard?offset=0&limit=100';
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+
+                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+                if (!response.ok) throw new Error('Failed to fetch leaderboard data');
+
+                const data = await response.json();
+                parseLeaderboardData(data);
             } catch (error) {
-                console.error('Error loading CSV:', error);
+                console.error('Error loading leaderboard:', error);
                 document.getElementById('loadingSection').classList.add('hidden');
                 document.getElementById('errorSection').classList.remove('hidden');
+
+                // Show more detailed error message
+                const errorMsg = document.querySelector('#errorSection p');
+                errorMsg.textContent = `Error: ${error.message}. Please try again later or check your internet connection.`;
             }
         }
 
-        function parseCSV(csv) {
-            const lines = csv.trim().split('\n').filter(line => line.trim().length > 0);
-
-            if (lines.length === 0) {
-                throw new Error('Empty CSV file');
-            }
-
-            const headers = lines[0].split(',').map(h => h.trim());
-
+        function parseLeaderboardData(data) {
             leaderboardData = [];
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
 
-                const values = parseCSVLine(line);
-                const obj = {};
-
-                headers.forEach((h, idx) => {
-                    obj[h] = values[idx] ? values[idx].trim() : '';
-                });
-
-                leaderboardData.push(obj);
+            if (!data.models || !Array.isArray(data.models)) {
+                throw new Error('Invalid data format');
             }
 
-            console.log(`Parsed ${leaderboardData.length} teams from CSV`);
+            data.models.forEach((item, index) => {
+                const teamData = {
+                    rank: item.rank || (index + 1),
+                    hacker: item.hacker || 'Unknown Team',
+                    score: item.score || 0,
+                    time_taken: item.time_taken || 0,
+                    country: item.country || '',
+                    school: item.school || '',
+                    avatar: item.avatar || 'https://d1ce3iv5vajdy.cloudfront.net/hackerrank/assets/gravatar.jpg'
+                };
+                leaderboardData.push(teamData);
+            });
+
+            console.log(`Loaded ${leaderboardData.length} teams from API`);
 
             filteredData = [...leaderboardData];
 
@@ -351,28 +359,6 @@
                 updateStatistics();
                 showControls();
             }, 500);
-        }
-
-        function parseCSVLine(line) {
-            const values = [];
-            let current = '';
-            let inQuotes = false;
-
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    values.push(current);
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            values.push(current);
-
-            return values;
         }
 
         function displayLeaderboard() {
