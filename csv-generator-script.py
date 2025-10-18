@@ -1,8 +1,10 @@
-import requests
 import csv
 import json
-from datetime import datetime
 import time
+from datetime import datetime
+
+import requests
+
 
 def fetch_leaderboard_with_headers(contest_slug, offset=0, limit=100):
     """
@@ -42,7 +44,7 @@ def manual_json_input():
     print("="*60)
     print("\nPlease follow these steps:")
     print("1. Open your browser and go to:")
-    print(f"   https://www.hackerrank.com/contests/sliit-xtreme-25/leaderboard")
+    print(f"   https://www.hackerrank.com/contests/sliitxtreme-4-final/leaderboard")
     print("\n2. Open Browser Developer Tools (F12)")
     print("3. Go to the 'Network' tab")
     print("4. Refresh the page")
@@ -146,7 +148,7 @@ def generate_sample_csv():
     print("✓ You can use this file to test the leaderboard webpage")
 
 if __name__ == "__main__":
-    CONTEST_SLUG = 'sliit-xtreme-25'
+    CONTEST_SLUG = 'sliitxtreme-4-final'
     OUTPUT_FILE = 'leaderboard.csv'
     
     print("=" * 60)
